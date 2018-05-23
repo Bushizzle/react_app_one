@@ -1,9 +1,14 @@
 .WW {
   background: #fff;
   position: relative;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
+}
+@media (max-width: 400px) {
+  .WW {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
 }
 .WW .arrow {
   cursor: pointer;
@@ -14,20 +19,19 @@
 }
 @media (max-width: 1024px) {
   .WW .arrow {
-    width: 21px;
-    height: 21px;
+    width: 24px;
+    height: 24px;
   }
 }
 .WW .WW_table {
-  position: absolute;
-  left: 100%;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transition: left ease .4s;
+  padding-bottom: 30px;
+  transition: all ease .4s;
+  transform: translateX(100%);
+}
+@media (max-width: 720px) {
 }
 .WW .WW_table.WW_table__active {
-  left: 0;
+  transform: translateX(0);
 }
 .WW .WW_table .WW_row {
   display: flex;
@@ -37,22 +41,46 @@
 .WW .WW_table .WW_row.WW_row__justify {
   justify-content: space-between;
 }
+@media (max-width: 600px) {
+  .WW .WW_table .WW_row.WW_row__scroll {
+    display: block;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}
 .WW .WW_table .WW_cell {
   position: relative;
 }
 .WW .WW_table .WW_cell.WW_cell__city {
-  padding: 40px 0 35px 118px;
+  padding: 40px 0 35px 0;
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__city {
     padding-bottom: 5px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__city {
+    padding-top: 33px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__city {
+    padding-top: 35px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__city {
+    padding-top: 37px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
-  display: block;
-  position: absolute;
-  left: 50px;
-  top: 53px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 50px;
   cursor: pointer;
   width: 29px;
   height: 29px;
@@ -61,18 +89,67 @@
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
-    width: 21px;
-    height: 21px;
+    margin-left: 40px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
+    margin-left: 38px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
+    margin-left: 25px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
+    margin-left: 20px;
+  }
+}
+@media (max-width: 1024px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-change {
+    width: 24px;
+    height: 24px;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__city .WW_city-name {
-  font: 500 48px 'Roboto';
+  font: 600 48px 'Roboto';
   color: #4e6973;
-  display: block;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 55px;
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__city .WW_city-name {
     font-size: 36px;
+    padding-right: 10px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-name {
+    font-size: 30px;
+    margin-left: 35px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-name {
+    font-size: 24px;
+    margin-left: 20px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-name {
+    font-size: 18px;
+    padding-right: 0;
+  }
+}
+.WW .WW_table .WW_cell.WW_cell__city .WW_city-name + .WW_city-name {
+  margin-left: 0;
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__city .WW_city-name + .WW_city-name {
+    display: none;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher {
@@ -85,6 +162,26 @@
   overflow: hidden;
   cursor: pointer;
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher {
+    margin-top: 35px;
+    margin-right: 35px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher {
+    margin-top: 38px;
+    margin-right: 34px;
+    width: 74px;
+    height: 23px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher {
+    margin-top: 38px;
+    margin-right: 20px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher .WW_switcher_lever {
   width: 33px;
   height: 29px;
@@ -96,12 +193,24 @@
   top: 0;
   transition: right ease .2s;
 }
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher .WW_switcher_lever {
+    width: 23px;
+    height: 23px;
+    right: 51px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher .WW_switcher_lever .wi {
   display: block;
   position: absolute;
   top: 7px;
   font: 19px/1 'weathericons';
   color: #4e6973;
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher .WW_switcher_lever .wi {
+    top: 3px;
+  }
 }
 .WW .WW_table .WW_cell.WW_cell__switcher .WW_switcher .WW_switcher_lever .wi.wi-celsius {
   left: -35px;
@@ -124,6 +233,26 @@
     font-size: 32px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell .WW_date-string {
+    padding-top: 32px;
+    font-size: 30px;
+    font-weight: 400;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell .WW_date-string {
+    font-size: 24px;
+    padding-left: 25px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell .WW_date-string {
+    padding-top: 30px;
+    padding-left: 20px;
+    font-size: 22px;
+  }
+}
 .WW .WW_table .WW_cell .WW_weather-description {
   padding: 15px 0 10px 40px;
   font: 300 37px/1 'Roboto';
@@ -134,6 +263,25 @@
   .WW .WW_table .WW_cell .WW_weather-description {
     padding-top: 5px;
     font-size: 24px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell .WW_weather-description {
+    font-size: 20px;
+    font-weight: 400;
+    padding-top: 0;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell .WW_weather-description {
+    font-size: 20px;
+    padding-left: 25px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell .WW_weather-description {
+    font-size: 18px;
+    padding-left: 20px;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__degrees {
@@ -149,6 +297,26 @@
     padding-right: 97px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees {
+    font-size: 80px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees {
+    font-size: 50px;
+    padding-top: 17px;
+    padding-right: 60px;
+    padding-left: 25px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees {
+    font-size: 40px;
+    padding-top: 60px;
+    padding-left: 20px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__degrees i {
   font-size: 200px;
   position: absolute;
@@ -159,6 +327,39 @@
   .WW .WW_table .WW_cell.WW_cell__degrees i {
     font-size: 140px;
     top: 2px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees i {
+    font-size: 100px;
+    top: 15px;
+    right: 36px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees i {
+    font-size: 70px;
+    top: 11px;
+    right: 15px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees i {
+    font-size: 50px;
+    top: 57px;
+    right: 24px;
+  }
+}
+.WW .WW_table .WW_cell.WW_cell__degrees .WW_daily-icon_mobile {
+  display: none;
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__degrees .WW_daily-icon_mobile {
+    display: block;
+    position: absolute;
+    left: 20px;
+    top: 15px;
+    font-size: 30px;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__weather-icon {
@@ -172,12 +373,41 @@
     font-size: 100px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__weather-icon {
+    font-size: 80px;
+    padding-left: 20px;
+    padding-top: 20px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__weather-icon {
+    font-size: 50px;
+    padding-left: 5px;
+    padding-top: 20px;
+  }
+}
+@media (max-width: 400px) {
+  .WW .WW_table .WW_cell.WW_cell__weather-icon {
+    display: none;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__during-the-day {
   padding: 25px 0 0 100px;
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__during-the-day {
     padding-top: 5px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__during-the-day {
+    padding-left: 38px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__during-the-day {
+    padding-left: 65px;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__during-the-day .WW__during-the-day_row {
@@ -192,8 +422,25 @@
     font-size: 18px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__during-the-day .WW__during-the-day_row {
+    font-size: 20px;
+    padding-bottom: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__during-the-day .WW__during-the-day_row {
+    font-size: 16px;
+    padding-bottom: 6px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__during-the-day .WW__during-the-day_row .WW__during-the-day_name {
   width: 140px;
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__during-the-day .WW__during-the-day_row .WW__during-the-day_name {
+    width: 80px;
+  }
 }
 .WW .WW_table .WW_cell.WW_cell__daily {
   flex-grow: 1;
@@ -206,12 +453,24 @@
     padding-top: 20px;
   }
 }
+@media (max-width: 720px) {
+  .WW .WW_table .WW_cell.WW_cell__daily {
+    padding-top: 50px;
+  }
+}
+@media (max-width: 600px) {
+  .WW .WW_table .WW_cell.WW_cell__daily {
+    display: inline-block;
+    width: 120px;
+    padding-top: 45px;
+  }
+}
 .WW .WW_table .WW_cell.WW_cell__daily .WW_daily-weekday {
   font-size: 18px;
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__daily .WW_daily-weekday {
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 .WW .WW_table .WW_cell.WW_cell__daily .WW_daily-icon {
@@ -230,7 +489,7 @@
 }
 @media (max-width: 1024px) {
   .WW .WW_table .WW_cell.WW_cell__daily .WW_daily-temp {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 .WW .WW_overlay {
@@ -261,8 +520,8 @@
 }
 @media (max-width: 1024px) {
   .WW .WW_overlay .WW_overlay_return {
-    width: 21px;
-    height: 21px;
+    width: 24px;
+    height: 24px;
   }
 }
 .WW .WW_overlay .WW_overlay_return.hidden {
@@ -276,6 +535,11 @@
 @media (max-width: 1024px) {
   .WW .WW_overlay .WW_overlay_city {
     margin-top: 160px;
+  }
+}
+@media (max-width: 720px) {
+  .WW .WW_overlay .WW_overlay_city {
+    width: 75%;
   }
 }
 .WW .WW_overlay .WW_overlay_city .WW_autocomplete-input {

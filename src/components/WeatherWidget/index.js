@@ -93,9 +93,8 @@ class WeatherWidget extends PureComponent {
 
                             <div className="WW_city-change" onClick={this.citySelectShow.bind(this)}> </div>
 
-                            <span className="WW_city-name">
-                            {`${this.state.city}, ${this.state.country}`}
-                        </span>
+                            <span className="WW_city-name">{this.state.city}</span>
+                            <span className="WW_city-name">({this.state.country})</span>
 
                         </div>
 
@@ -103,8 +102,8 @@ class WeatherWidget extends PureComponent {
 
                             <div className={`WW_switcher${this.state.temperatureMode === 'C' ? ' WW_switcher__active' : ''}`}>
                                 <div className="WW_switcher_lever">
-                                    <div className="wi wi-fahrenheit"></div>
-                                    <div className="wi wi-celsius"></div>
+                                    <div className="wi wi-fahrenheit"> </div>
+                                    <div className="wi wi-celsius"> </div>
                                 </div>
                             </div>
 
@@ -133,6 +132,7 @@ class WeatherWidget extends PureComponent {
                     <div className="WW_row">
 
                         <div className="WW_cell WW_cell__degrees">
+                            <i className = { `WW_daily-icon WW_daily-icon_mobile wi ${currentIcon}` } > </i>
                             {this.getTemperatureString(currentTemp)}
                         </div>
 
@@ -147,7 +147,7 @@ class WeatherWidget extends PureComponent {
 
                     </div>
 
-                    <div className="WW_row WW_row__justify">
+                    <div className="WW_row WW_row__justify WW_row__scroll">
 
                         {weatherList}
 
@@ -227,7 +227,7 @@ class WeatherWidget extends PureComponent {
     };
 
     getTemperature = (t) => this.state.temperatureMode === 'C' ? t : Math.round(9/5*t + 32);
-    getTemperatureString = (t) => <span>{this.getTemperature(t)}<i className={`wi wi-${this.state.temperatureMode === 'C' ? 'celsius' : 'fahrenheit'}`}></i></span>;
+    getTemperatureString = (t) => <span>{this.getTemperature(t)}<i className={`wi wi-${this.state.temperatureMode === 'C' ? 'celsius' : 'fahrenheit'}`}> </i></span>;
 
 
 
