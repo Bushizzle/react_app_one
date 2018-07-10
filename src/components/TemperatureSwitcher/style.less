@@ -1,0 +1,85 @@
+@import '../../css/variables';
+
+.WW_cell__switcher {
+
+    .WW_switcher {
+
+        width: 89px;
+        height: 29px;
+
+        border: 1px solid @fontColorDark;
+        border-radius: 30px;
+
+        margin: 52px 41px 0 0;
+
+        @media (max-width: 720px){
+            margin-top: 35px;
+            margin-right: 35px;
+        }
+        @media (max-width: 600px){
+            margin-top: 38px;
+            margin-right: 34px;
+
+            width: 74px;
+            height: 23px;
+        }
+        @media (max-width: 400px){
+            margin-top: 38px;
+            margin-right: 20px;
+        }
+
+
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+
+        .WW_switcher_lever {
+
+            width: 33px;
+            height: 29px;
+            box-sizing: border-box;
+            border: 1px solid @fontColorDark;
+            border-radius: 30px;
+
+            position: absolute;
+            right: 56px;
+            top: 0;
+
+            transition: right ease .2s;
+
+            @media (max-width: 600px){
+                width: 23px;
+                height: 23px;
+
+                right: 51px;
+            }
+
+            .wi {
+                display: block;
+                position: absolute;
+                top: 7px;
+                font: 19px/1 'weathericons';
+
+                color: @fontColorDark;
+
+                @media (max-width: 600px){
+                    top: 3px;
+                }
+
+
+                &.wi-celsius {
+                    left: -35px;
+                }
+                &.wi-fahrenheit {
+                    right: -35px;
+                }
+            }
+
+        }
+
+        &.WW_switcher__active .WW_switcher_lever {
+            right: 0;
+        }
+    }
+
+}

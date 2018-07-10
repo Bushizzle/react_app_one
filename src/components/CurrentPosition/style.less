@@ -1,0 +1,28 @@
+@import '../../css/variables';
+
+.WW_overlay_current-position button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    display: inline-block;
+
+    background: none;
+    border: 0;
+    outline: none;
+
+    border-bottom: 1px dashed @fontColorDark;
+
+    cursor: pointer;
+    font-size: inherit;
+    color: @fontColorDark;
+
+    &:hover {
+        opacity: .8;
+    }
+
+    &:focus {
+        outline: none;
+        border: none;
+    }
+}

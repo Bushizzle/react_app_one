@@ -1,0 +1,39 @@
+@import '../../css/variables';
+
+.WW_autocomplete-input {
+
+    font: 700 50px @fontFamily, 'Arial';
+    color: @fontColorDark;
+    text-align: center;
+
+    @media (max-width: 1024px){
+        font-size: 30px;
+    }
+
+    display: block;
+    width: 100%;
+
+    border: none;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.WW_autocomplete-drop {
+    border: 1px solid @fontColorDark;
+    box-sizing: border-box;
+    color: @fontColorDark;
+
+    .WW_autocomplete-drop_item {
+
+        color: #000;
+        padding: 2px 5px;
+        cursor: pointer;
+
+        &.WW_autocomplete-drop_item__active {
+            color: @fontColorBright;
+        }
+    }
+
+}

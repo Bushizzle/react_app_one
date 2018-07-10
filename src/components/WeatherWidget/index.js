@@ -1,9 +1,15 @@
 import React, {PureComponent} from 'react'
 
-import iconsDictionary from '../../icons.dictionary';
+import iconsDictionary from '../../icons.dictionary'
 
-import PlacesAutocomplete from 'react-places-autocomplete';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import Helpers from '../../modules/helpers'
+import Geolocation from '../../modules/geolocation'
+
+import TemperatureSwitcher from '../TemperatureSwitcher'
+import CitySelect from '../CitySelect'
+import CurrentPosition from '../CurrentPosition'
+
+import LoadingOverlay from '../LoadingOverlay'
 
 import './style.css';
 
@@ -26,9 +32,18 @@ class WeatherWidget extends PureComponent {
 
         citySelect: true,
         address: '',
+        placeholder: 'City',
+
+        loading: false
     };
 
     componentWillMount() {
+
+        this.helpers = new Helpers();
+
+        this.geolocation = new Geolocation({
+            updateParent: this.stateUpdater
+        });
 
         let appState = {
             currentDaytimeNumber: Math.floor((new Date()).getHours()/3)
@@ -40,7 +55,7 @@ class WeatherWidget extends PureComponent {
 
         this.setState(appState);
 
-        this.sePeriodEndTimer();
+        this.setPeriodEndTimer();
         this.setDayEndTimer();
 
         this.initApp();
@@ -63,11 +78,11 @@ class WeatherWidget extends PureComponent {
             .map(daily =>
                 <div key = { Math.random().toString(36).substr(2, 9) } className="WW_cell WW_cell__daily">
 
-                    <div className="WW_daily-weekday">{daily.weekDay}</div>
+                    <span className="WW_daily-weekday">{daily.weekDay}</span>
 
                     <i className = { `WW_daily-icon wi ${iconsDictionary[daily.weather.byHours[4].icon]}` }> </i>
 
-                    <div className="WW_daily-temp">{this.getTemperatureString(daily.weather.byDaytimes[2])}</div>
+                    <span className="WW_daily-temp">{this.helpers.getTemperatureString(this.state.temperatureMode, daily.weather.byDaytimes[2])}</span>
                 </div>);
 
         const daytimes = ['Night', 'Morning', 'Day', 'Evening'];
@@ -75,7 +90,7 @@ class WeatherWidget extends PureComponent {
             <div key = { Math.random().toString(36).substr(2, 9) } className="WW__during-the-day_row">
                 <span className="WW__during-the-day_name">{daytimes[i]}</span>
                 <span className="WW__during-the-day_temp">
-                    {this.getTemperatureString(t)}
+                    {this.helpers.getTemperatureString(this.state.temperatureMode, t)}
                 </span>
             </div>
         );
@@ -91,21 +106,16 @@ class WeatherWidget extends PureComponent {
 
                         <div className="WW_cell WW_cell__city">
 
-                            <div className="WW_city-change" onClick={this.citySelectShow.bind(this)}> </div>
+                            <button className="WW_city-change" onClick={this.citySelectShow.bind(this)}> </button>
 
                             <span className="WW_city-name">{this.state.city}</span>
                             <span className="WW_city-name">({this.state.country})</span>
 
                         </div>
 
-                        <div className="WW_cell WW_cell__switcher" onClick={this.switchTemperatureMode}>
+                        <div className="WW_cell WW_cell__switcher">
 
-                            <div className={`WW_switcher${this.state.temperatureMode === 'C' ? ' WW_switcher__active' : ''}`}>
-                                <div className="WW_switcher_lever">
-                                    <div className="wi wi-fahrenheit"> </div>
-                                    <div className="wi wi-celsius"> </div>
-                                </div>
-                            </div>
+                            <TemperatureSwitcher temperatureMode={this.state.temperatureMode} updateParent={this.stateUpdater.bind(this)} />
 
                         </div>
 
@@ -114,18 +124,18 @@ class WeatherWidget extends PureComponent {
                     <div className="WW_row">
                         <div className="WW_cell WW_cell__full">
 
-                            <div className="WW_date-string">
-                                {this.getDateString(new Date())}
-                            </div>
+                            <span className="WW_date-string">
+                                {this.helpers.getDateString(new Date())}
+                            </span>
 
                         </div>
                     </div>
 
                     <div className="WW_row">
                         <div className="WW_cell WW_cell__full">
-                            <div className="WW_weather-description">
+                            <span className="WW_weather-description">
                                 {currentDescription}
-                            </div>
+                            </span>
                         </div>
                     </div>
 
@@ -133,7 +143,7 @@ class WeatherWidget extends PureComponent {
 
                         <div className="WW_cell WW_cell__degrees">
                             <i className = { `WW_daily-icon WW_daily-icon_mobile wi ${currentIcon}` } > </i>
-                            {this.getTemperatureString(currentTemp)}
+                            {this.helpers.getTemperatureString(this.state.temperatureMode, currentTemp)}
                         </div>
 
                         <div className="WW_cell WW_cell__weather-icon">
@@ -148,170 +158,33 @@ class WeatherWidget extends PureComponent {
                     </div>
 
                     <div className="WW_row WW_row__justify WW_row__scroll">
-
                         {weatherList}
-
                     </div>
 
                 </div>
 
                 <div className={`WW_overlay${this.state.citySelect ? ' WW_overlay__active' : ''}`}>
 
-                    <div
+                    <button
                         onClick={ ()=>{this.setState({citySelect: false})} }
                         className={ `WW_overlay_return ${!this.state.city ? ' hidden' : ''}` }
-                        > </div>
+                        > </button>
 
-                        <div className="WW_overlay_city">
+                    <div className="WW_overlay_city">
 
-                        <PlacesAutocomplete
-                            value={this.state.address}
-                            onChange={this.citySelectChange.bind(this)}
-                            onSelect={this.citySelectAccept.bind(this)}
-                            searchOptions={{ types: ['(cities)'] }}
-                        >
-                            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-                                <div>
-                                    <input
-                                        {...getInputProps({
-                                            placeholder: 'City',
-                                            className: 'WW_autocomplete-input'
-                                        })}
-                                    />
-                                    <div className="WW_autocomplete-drop">
-                                        {suggestions.map(suggestion => {
+                        <CitySelect address={this.state.address} placeholder={this.state.placeholder} updateParent={this.stateUpdater.bind(this)} requestAppData={this.requestAppData.bind(this)} />
 
-                                            const className = suggestion.active ? 'WW_autocomplete-drop_item WW_autocomplete-drop_item__active' : 'WW_autocomplete-drop_item';
-
-                                            return (
-                                                <div {...getSuggestionItemProps(suggestion, { className })}>
-                                                    <span>{suggestion.description}</span>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-                        </PlacesAutocomplete>
-
-                        {this.state.geolocation ? <div className="WW_overlay_current-position"><span>or</span><span>use my <a onClick={this.resetPosition.bind(this)}>current position</a></span></div> : ''}
+                        {this.state.geolocation ? <div className="WW_overlay_current-position"><span>or</span><span>use my <CurrentPosition resetParent={this.initApp.bind(this)} /></span></div> : ''}
 
                     </div>
 
                 </div>
 
+                {this.state.loading ? <LoadingOverlay /> : ''}
+
             </div>
         )
     }
-
-    // Helpers //
-
-    getDateString = (date) => {
-
-        const month = ['January','February','March','April','May','June','July','August','September','October','November','December'],
-            week = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-        return `${week[date.getDay()]}, ${month[date.getMonth()]} ${this.getNumberWithSuffix(date.getUTCDate())} ${date.getFullYear()}`;
-    };
-
-    getNumberWithSuffix = (n) => {
-        const s = ["th","st","nd","rd"],
-            v=n%100;
-
-        return n+(s[(v-20)%10]||s[v]||s[0]);
-    };
-
-    getNowDateString = () => {
-        const now = new Date();
-        return `${now.getFullYear()}/${ now.getMonth()}/${now.getDate()}`;
-    };
-
-    getTemperature = (t) => this.state.temperatureMode === 'C' ? t : Math.round(9/5*t + 32);
-    getTemperatureString = (t) => <span>{this.getTemperature(t)}<i className={`wi wi-${this.state.temperatureMode === 'C' ? 'celsius' : 'fahrenheit'}`}> </i></span>;
-
-
-
-    // Geolocation
-
-    getBrowserGeolocation = () => {
-
-        if (navigator.geolocation) {
-            return new Promise(
-                (resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject)
-            )
-        } else {
-            return new Promise(
-                resolve => resolve({})
-            )
-        }
-    };
-
-    checkSelfPosition = (position) => {
-
-        return new Promise((resolve, reject) => {
-
-            const previousPosition = localStorage.getItem('weatherAppPosition') ? JSON.parse(localStorage.getItem('weatherAppPosition')) : null;
-
-            if(previousPosition){
-
-                this.setState({...previousPosition});
-
-                resolve( previousPosition );
-
-            }
-            else {
-
-                const geocoder = new window.google.maps.Geocoder();
-                const latlng = new window.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-                geocoder.geocode({ location: latlng }, (results, status) => {
-
-                    if (status === window.google.maps.GeocoderStatus.OK) {
-
-                        if (results[0]) {
-
-                            const value = results.find(r => r.types.indexOf('administrative_area_level_1') !== -1);
-                            const city = value.formatted_address.split(',')[0];
-                            const country = value.formatted_address.split(', ')[1];
-
-                            const newPosition = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude,
-                                city,
-                                country
-                            };
-
-                            localStorage.setItem('weatherAppPosition', JSON.stringify(newPosition));
-
-                            this.setState({ ...newPosition });
-
-                            resolve( newPosition );
-
-                        } else {
-                            reject(["address not found", results]);
-                        }
-
-                    } else {
-                        reject(["request error", status]);
-                    }
-
-                });
-
-
-            }
-
-
-        })
-
-    };
-
-    resetPosition = () => {
-        localStorage.removeItem('weatherAppPosition');
-        localStorage.removeItem('weatherAppData');
-        this.initApp();
-    };
-
-    // city select autocomplete
 
     citySelectShow = () => {
         this.setState({
@@ -321,58 +194,15 @@ class WeatherWidget extends PureComponent {
 
     };
 
-    citySelectChange = address => {
-        this.setState({ address });
-    };
 
-    citySelectAccept = address => {
-
-        geocodeByAddress(address)
-            .then(results => getLatLng(results[0]))
-            .then(position => {
-
-                const addressArr = address.split(', '),
-                    city = addressArr[0],
-                    country = addressArr[addressArr.length - 1];
-
-                localStorage.setItem('weatherAppPosition', JSON.stringify({
-                    ...position,
-                    city,
-                    country
-                }));
-
-                this.setState({
-                    ...position,
-                    city,
-                    country
-                });
-
-                this.requestAppData(position);
-            })
-            .catch(error => console.error('Error', error))
-
-    };
-
-
-    // Switcher
-
-    switchTemperatureMode = () => {
-        const newState =  this.state.temperatureMode === 'C' ? 'F' : 'C';
-
-        this.setState({
-            temperatureMode: newState
-        });
-
-        localStorage.setItem('weatherAppTemperatureMode', newState);
-    };
-
-    // Application start //
 
     initApp = () => {
 
-        this.getBrowserGeolocation()
+        this.setState({loading: true});
+
+        this.geolocation.getBrowserGeolocation()
             .then(
-                position => this.checkSelfPosition(position)
+                position => this.geolocation.checkSelfPosition(position)
             )
             .then(
                 position => this.loadWeatherData(position),
@@ -394,7 +224,7 @@ class WeatherWidget extends PureComponent {
         const weatherAppData = localStorage.getItem('weatherAppData') ? JSON.parse(localStorage.getItem('weatherAppData')) : null,
             weatherAppPosition = localStorage.getItem('weatherAppPosition') ? JSON.parse(localStorage.getItem('weatherAppPosition')) : null;
 
-        if(weatherAppData && weatherAppPosition && weatherAppData.startDate === this.getNowDateString()){
+        if(weatherAppData && weatherAppPosition && weatherAppData.startDate === this.helpers.getNowDateString()){
 
             this.startApp({
                 ...weatherAppData,
@@ -411,6 +241,8 @@ class WeatherWidget extends PureComponent {
     };
 
     requestAppData = (position) => {
+
+        if(!this.state.loading) this.setState({loading: true});
 
         new Promise((resolve, reject) => {
 
@@ -526,12 +358,10 @@ class WeatherWidget extends PureComponent {
 
             });
 
-        console.log(weatherByDays);
-
         return {
 
             weather: weatherByDays,
-            startDate: this.getNowDateString(),
+            startDate: this.helpers.getNowDateString(),
             currentDayNumber: 0
 
         };
@@ -543,7 +373,8 @@ class WeatherWidget extends PureComponent {
 
         this.setState({
             ...data,
-            citySelect: false
+            citySelect: false,
+            loading: false
         });
 
     };
@@ -561,7 +392,7 @@ class WeatherWidget extends PureComponent {
 
     };
 
-    sePeriodEndTimer = () => {
+    setPeriodEndTimer = () => {
 
         const now = new Date();
         const nowMilliseconds = 24*60*60*1000 - (new Date(now.getFullYear(), now.getMonth(), now.getDate()+1) - now);
@@ -572,11 +403,13 @@ class WeatherWidget extends PureComponent {
                 currentDaytimeNumber: this.state.currentDaytimeNumber !== 7 ? this.state.currentDaytimeNumber + 1 : 0
             });
 
-            this.sePeriodEndTimer();
+            this.setPeriodEndTimer();
 
         }, 10800000 - nowMilliseconds % (3*60*60*1000));
 
     };
+
+    stateUpdater = data => this.setState(data);
 
 
 }

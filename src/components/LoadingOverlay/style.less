@@ -1,0 +1,28 @@
+@import '../../css/variables';
+
+.WW_loading {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 999;
+
+    background: rgba(0,0,0,.4);
+    cursor: wait;
+
+    .WW_loading-text {
+        display: block;
+        position: absolute;
+
+        width: 200px;
+        margin-left: -100px;
+        top: 50%;
+        left: 50%;
+
+        text-align: center;
+        font: 600 46px @fontFamily;
+        color: #fff;
+    }
+}
