@@ -1,0 +1,25 @@
+@import '../../css/variables';
+
+.WW_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    &.WW_row__justify {
+        justify-content: space-between;
+    }
+
+    &.WW_row__scroll {
+        @media (max-width: 600px){
+
+            display: block;
+            width: 100%;
+
+            text-align: center;
+
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    }
+}

@@ -5,6 +5,9 @@ import iconsDictionary from '../../icons.dictionary'
 import Helpers from '../../modules/helpers'
 import Geolocation from '../../modules/geolocation'
 
+import Row from '../WwRow'
+import Cell from '../WwCell'
+
 import TemperatureSwitcher from '../TemperatureSwitcher'
 import CitySelect from '../CitySelect'
 import CurrentPosition from '../CurrentPosition'
@@ -76,14 +79,15 @@ class WeatherWidget extends PureComponent {
 
         const weatherList = weather && weather
             .map(daily =>
-                <div key = { Math.random().toString(36).substr(2, 9) } className="WW_cell WW_cell__daily">
+                <Cell key = { Math.random().toString(36).substr(2, 9) } addClass="daily">
 
                     <span className="WW_daily-weekday">{daily.weekDay}</span>
 
                     <i className = { `WW_daily-icon wi ${iconsDictionary[daily.weather.byHours[4].icon]}` }> </i>
 
                     <span className="WW_daily-temp">{this.helpers.getTemperatureString(this.state.temperatureMode, daily.weather.byDaytimes[2])}</span>
-                </div>);
+
+                </Cell>);
 
         const daytimes = ['Night', 'Morning', 'Day', 'Evening'];
         const weatherDuringTheDay = today && today.weather.byDaytimes.map((t, i) =>
@@ -102,64 +106,68 @@ class WeatherWidget extends PureComponent {
 
                 <div className={`WW_table${!this.state.citySelect ? ' WW_table__active' : ''}`}>
 
-                    <div className="WW_row WW_row__justify">
+                    <Row addClass="justify">
 
-                        <div className="WW_cell WW_cell__city">
+                        <Cell addClass="city">
 
                             <button className="WW_city-change" onClick={this.citySelectShow.bind(this)}> </button>
 
                             <span className="WW_city-name">{this.state.city}</span>
                             <span className="WW_city-name">({this.state.country})</span>
 
-                        </div>
+                        </Cell>
 
-                        <div className="WW_cell WW_cell__switcher">
+                        <Cell addClass="switcher">
 
                             <TemperatureSwitcher temperatureMode={this.state.temperatureMode} updateParent={this.stateUpdater.bind(this)} />
 
-                        </div>
+                        </Cell>
 
-                    </div>
+                    </Row>
 
-                    <div className="WW_row">
-                        <div className="WW_cell WW_cell__full">
+                    <Row>
+
+                        <Cell>
 
                             <span className="WW_date-string">
                                 {this.helpers.getDateString(new Date())}
                             </span>
 
-                        </div>
-                    </div>
+                        </Cell>
 
-                    <div className="WW_row">
-                        <div className="WW_cell WW_cell__full">
+                    </Row>
+
+                    <Row>
+
+                        <Cell>
                             <span className="WW_weather-description">
                                 {currentDescription}
                             </span>
-                        </div>
-                    </div>
+                        </Cell>
 
-                    <div className="WW_row">
+                    </Row>
 
-                        <div className="WW_cell WW_cell__degrees">
+                    <Row>
+
+                        <Cell addClass="degrees">
                             <i className = { `WW_daily-icon WW_daily-icon_mobile wi ${currentIcon}` } > </i>
                             {this.helpers.getTemperatureString(this.state.temperatureMode, currentTemp)}
-                        </div>
+                        </Cell>
 
-                        <div className="WW_cell WW_cell__weather-icon">
+                        <Cell addClass="weather-icon">
                             <i className = { `WW_daily-icon wi ${currentIcon}` } > </i>
 
-                        </div>
+                        </Cell>
 
-                        <div className="WW_cell WW_cell__during-the-day">
+                        <Cell addClass="during-the-day">
                             {weatherDuringTheDay}
-                        </div>
+                        </Cell>
 
-                    </div>
+                    </Row>
 
-                    <div className="WW_row WW_row__justify WW_row__scroll">
+                    <Row addClass="justify scroll">
                         {weatherList}
-                    </div>
+                    </Row>
 
                 </div>
 
